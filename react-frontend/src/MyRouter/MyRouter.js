@@ -94,132 +94,61 @@ import UserChangePasswordProjectLayoutPage from '../components/cb_components/Use
 import TestProjectLayoutPage from '../components/cb_components/TestsPage/TestProjectLayoutPage';
 import SingleTestsPage from '../components/cb_components/TestsPage/SingleTestsPage';
 
-import SingleCartPage from "../components/app_components/CartPage/SingleCartPage";
-import CartProjectLayoutPage from "../components/app_components/CartPage/CartProjectLayoutPage";
-import SingleVoucherPage from "../components/app_components/VoucherPage/SingleVoucherPage";
+import CartPage from "../components/app_components/CartPage/CartPage";
+import VoucherDetailsPage from "../components/app_components/VoucherPage/VoucherDetailsPage";
 import VoucherProjectLayoutPage from "../components/app_components/VoucherPage/VoucherProjectLayoutPage";
 import SingleCartHistoryPage from "../components/app_components/CartHistoryPage/SingleCartHistoryPage";
 import CartHistoryProjectLayoutPage from "../components/app_components/CartHistoryPage/CartHistoryProjectLayoutPage";
+import HomePage from "../components/app_components/HomePage/HomePageSimple";
+import UserProfile from "../components/app_components/UserProfile/UserProfile";
 //  ~cb-add-import~
 
 const MyRouter = (props) => {
     return (
         <Routes>
-            <Route path="/" exact element={props.isLoggedIn ? <DashboardAdminControl /> : <LoginPage />} />
-            <Route path="/login" exact element={props.isLoggedIn === true ? <DashboardAdminControl /> : <LoginPage />} />
+            <Route path="/" exact element={<HomePage />} />
+            <Route path="/home" exact element={<HomePage />} />
+            {/* <Route path="/login" exact element={props.isLoggedIn === true ? <HomePage /> : <LoginPage />} /> */}
+            <Route path="/login" exact element={
+                props.isLoggedIn 
+                    ? (props.user?.role === "admin" ? <Dashboard /> : <VoucherProjectLayoutPage />)
+                    : <LoginPage />
+                } />
             <Route path="/reset/:singleChangeForgotPasswordId" exact element={<ResetPage />} />
             <Route path="/signup" exact element={<SignUpPage />} />
             <Route path="/maintenance" exact element={<MaintenancePage />} />
             <Route path="/login-faq" exact element={<LoginFaqPage />} />
 
             <Route element={<ProtectedRoute redirectPath={'/login'} />}>
-            <Route path="/project" exact element={<DashboardAdminControl />} />
-                // user details
+                <Route path="/project" exact element={<DashboardAdminControl />} />
+
+                {/* 👤 Common User Routes */}
                 <Route path="/account" exact element={<Account />} />
                 <Route path="/users/:singleUsersId" exact element={<SingleUsersPage />} />
                 <Route path="/users" exact element={<UserProjectLayoutPage />} />
+                <Route path="/cart" exact element={<CartPage />} />
+                <Route path="/voucher/:singleVoucherId" exact element={<VoucherDetailsPage />} />
+                <Route path="/voucher" exact element={<VoucherProjectLayoutPage />} />
+                <Route path="/cartHistory/:singleCartHistoryId" exact element={<SingleCartHistoryPage />} />
+                <Route path="/cartHistory" exact element={<CartHistoryProjectLayoutPage />} />
+                <Route path="/profile" exact element={<UserProfile />} />
 
-                // myapp
-<Route path="/cart/:singleCartId" exact element={<SingleCartPage />} />
-<Route path="/cart" exact element={<CartProjectLayoutPage />} />
-<Route path="/voucher/:singleVoucherId" exact element={<SingleVoucherPage />} />
-<Route path="/voucher" exact element={<VoucherProjectLayoutPage />} />
-<Route path="/cartHistory/:singleCartHistoryId" exact element={<SingleCartHistoryPage />} />
-<Route path="/cartHistory" exact element={<CartHistoryProjectLayoutPage />} />
-                {/* ~cb-add-protected-route~ */}
+                {/* 🔐 Admin-Only Routes */}
+                {props.user?.role === "admin" && (
+                    <>
+                    <Route path="/dashboard" exact element={<Dashboard />} />
+                    <Route path="/DashboardAdminControl" exact element={<DashboardAdminControl />} />
+                    <Route path="/DashboardCompanyData" exact element={<DashboardCompanyData />} />
+                    <Route path="/DashboardDataManagement" exact element={<DashboardDataManagement />} />
+                    <Route path="/DashboardErrors" exact element={<DashboardErrors />} />
+                    <Route path="/DashboardMessaging" exact element={<DashboardMessaging />} />
+                    <Route path="/DashboardUserManagement" exact element={<DashboardUserManagement />} />
 
-                // dashboards
-                <Route path="/dashboard" exact element={<Dashboard />} />
-                <Route path="/DashboardAdminControl" exact element={<DashboardAdminControl />} />
-                <Route path="/DashboardCompanyData" exact element={<DashboardCompanyData />} />
-                <Route path="/DashboardDataManagement" exact element={<DashboardDataManagement />} />
-                <Route path="/DashboardErrors" exact element={<DashboardErrors />} />
-                <Route path="/DashboardMessaging" exact element={<DashboardMessaging />} />
-                <Route path="/DashboardUserManagement" exact element={<DashboardUserManagement />} />
-
-                // user details
-                <Route path="/users/:singleUsersId" exact element={<SingleUsersPage />} />
-                <Route path="/users" exact element={<UserProjectLayoutPage />} />
-                <Route path="/userInvites/:singleUserInvitesId" exact element={<SingleUserInvitesPage />} />
-                <Route path="/userInvites" exact element={<UserInvitesProjectLayoutPage />} />
-                <Route path="/userLogin/:singleUserLoginId" exact element={<SingleUserLoginPage />} />
-                <Route path="/userLogin" exact element={<UserLoginProjectLayoutPage />} />
-                <Route path="/userAddresses/:singleUserAddressesId" exact element={<SingleUserAddressesPage />} />
-                <Route path="/userAddresses" exact element={<UserAddressProjectLayoutPage />} />
-                <Route path="/userPhones/:singleUserPhonesId" exact element={<SingleUserPhonesPage />} />
-                <Route path="/userPhones" exact element={<UserPhoneProjectLayoutPage />} />
-                <Route path="/userChangePassword/:singleUserChangePasswordId" exact element={<SingleUserChangePasswordPage />} />
-                <Route path="/userChangePassword" exact element={<UserChangePasswordProjectLayoutPage />} />
-                // user management
-                <Route path="/roles/:singleRolesId" exact element={<SingleRolesPage />} />
-                <Route path="/roles" exact element={<RoleProjectLayoutPage />} />
-                <Route path="/positions/:singlePositionsId" exact element={<SinglePositionsPage />} />
-                <Route path="/positions" exact element={<PositionProjectLayoutPage />} />
-                <Route path="/profiles/:singleProfilesId" exact element={<SingleProfilesPage />} />
-                <Route path="/profiles" exact element={<ProfileProjectLayoutPage />} />
-                // company data
-                <Route path="/companies/:singleCompaniesId" exact element={<SingleCompaniesPage />} />
-                <Route path="/companies" exact element={<CompanyProjectLayoutPage />} />
-                <Route path="/branches/:singleBranchesId" exact element={<SingleBranchesPage />} />
-                <Route path="/branches" exact element={<BranchProjectLayoutPage />} />
-                <Route path="/departments/:singleDepartmentsId" exact element={<SingleDepartmentsPage />} />
-                <Route path="/departments" exact element={<DepartmentProjectLayoutPage />} />
-                <Route path="/sections/:singleSectionsId" exact element={<SingleSectionsPage />} />
-                <Route path="/sections" exact element={<SectionProjectLayoutPage />} />
-                <Route path="/companyAddresses/:singleCompanyAddressesId" exact element={<SingleCompanyAddressesPage />} />
-                <Route path="/companyAddresses" exact element={<CompanyAddressProjectLayoutPage />} />
-                <Route path="/companyPhones/:singleCompanyPhonesId" exact element={<SingleCompanyPhonesPage />} />
-                <Route path="/companyPhones" exact element={<CompanyPhoneProjectLayoutPage />} />
-                // admin controls
-                <Route path="/permissionServices/:singlePermissionServicesId" exact element={<SinglePermissionServicesPage />} />
-                <Route path="/permissionServices" exact element={<PermissionServiceProjectLayoutPage />} />
-                <Route path="/permissionFields/:singlePermissionFieldsId" exact element={<SinglePermissionFieldsPage />} />
-                <Route path="/permissionFields" exact element={<PermissionFieldProjectLayoutPage />} />
-                <Route path="/superior/:singleSuperiorId" exact element={<SingleSuperiorPage />} />
-                <Route path="/superior" exact element={<SuperiorProjectLayoutPage />} />
-                <Route path="/departmentAdmin/:singleDepartmentAdminId" exact element={<SingleDepartmentAdminPage />} />
-                <Route path="/departmentAdmin" exact element={<DepartmentAdminProjectLayoutPage />} />
-                <Route path="/departmentHOD/:singleDepartmentHODId" exact element={<SingleDepartmentHODPage />} />
-                <Route path="/departmentHOD" exact element={<DepartmentHODProjectLayoutPage />} />
-                <Route path="/departmentHOS/:singleDepartmentHOSId" exact element={<SingleDepartmentHOSPage />} />
-                <Route path="/departmentHOS" exact element={<DepartmentHOProjectLayoutPage />} />
-                <Route path="/employees/:singleEmployeesId" exact element={<SingleEmployeesPage />} />
-                <Route path="/employees" exact element={<EmployeeProjectLayoutPage />} />
-                <Route path="/staffinfo/:singleStaffinfoId" exact element={<SingleStaffinfoPage />} />
-                <Route path="/staffinfo" exact element={<StaffinfoProjectLayoutPage />} />
-                <Route path="/tests/:singleTestsId" exact element={<SingleTestsPage />} />
-                <Route path="/tests" exact element={<TestProjectLayoutPage />} />
-                // notifications and messaging
-                <Route path="/notifications/:singleNotificationsId" exact element={<SingleNotificationsPage />} />
-                <Route path="/notifications" exact element={<NotificationProjectLayoutPage />} />
-                <Route path="/inbox/:singleInboxId" exact element={<SingleInboxPage />} />
-                <Route path="/inbox" exact element={<InboxProjectLayoutPage />} />
-                <Route path="/templates/:singleTemplatesId" exact element={<SingleTemplatesPage />} />
-                <Route path="/templates" exact element={<TemplateProjectLayoutPage />} />
-                <Route path="/mails/:singleMailsId" exact element={<SingleMailsPage />} />
-                <Route path="/mails" exact element={<MailProjectLayoutPage />} />
-                // document storage
-                <Route path="/documentStorages/:singleDocumentStoragesId" exact element={<SingleDocumentStoragesPage />} />
-                <Route path="/documentStorages" exact element={<DocumentStorageProjectLayoutPage />} />
-                // data loader
-                <Route path="/dynaLoader/:singleDynaLoaderId" exact element={<SingleDynaLoaderPage />} />
-                <Route path="/dynaLoader" exact element={<DynaLoaderProjectLayoutPage />} />
-                <Route path="/dynaFields" exact element={<DynaFieldsProjectLayoutPage />} />
-                // jobs and ques
-                <Route path="/jobQues" exact element={<JobQueProjectLayoutPage />} />
-                <Route path="/mailQues/:singleMailQuesId" exact element={<SingleMailQuesPage />} />
-                <Route path="/mailQues" exact element={<MailQueProjectLayoutPage />} />
-                // gen ai
-                <Route path="/chataiProject" element={<ChataiProjectLayoutPage />} />
-                <Route path="/chataiProject/:promptId" element={<ChataiProjectLayoutPage />} />
-                <Route path="/prompts" exact element={<PromptsUserLayoutPage />} />
-                <Route path="/prompts/:singlePromptsId" exact element={<SinglePromptsPage />} />
-                <Route path="/chataiUsage" exact element={<ChatAiUsageLayoutPage />} />
-                // bugs and errors
-                <Route path="/errorLogs/:singleErrorLogsId" exact element={<SingleErrorLogsPage />} />
-                <Route path="/errorLogs" exact element={<ErrorLogProjectLayoutPage />} />
-
+                    {/* ...you can wrap more admin-only routes here */}
+                    </>
+                )}
             </Route>
+
             {/* ~cb-add-route~ */}
 
             <Route path="*" element={<NoMatch />} />
@@ -228,9 +157,10 @@ const MyRouter = (props) => {
 };
 
 const mapState = (state) => {
-    const { isLoggedIn } = state.auth;
-    return { isLoggedIn };
+    const { isLoggedIn, user } = state.auth;
+    return { isLoggedIn, user };
 };
+
 const mapDispatch = (dispatch) => ({
     alert: (data) => dispatch.toast.alert(data)
 });

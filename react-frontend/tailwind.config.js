@@ -1,18 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-	corePlugins: {
-		preflight: false,
-	},
-	content: ['./src/**/*.{js,jsx,ts,tsx}'],
-	theme: {
-		extend: {
-			colors: {
-				primary: 'var(--primary-color)',
-				secondary: 'var(--secondary-color)',
-				link: '#0082D4',
-				grey: '#ADB5BD',
-			},
-		},
-	},
-	plugins: [],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        primary: '#0a2540',
+        secondary: '#0074b7',
+        link: '#0082D4',
+        grey: '#ADB5BD',
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
 };

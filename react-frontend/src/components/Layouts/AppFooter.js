@@ -1,9 +1,15 @@
-const AppFooter = (props) => {
+const AppFooter = () => {
   return (
-    <footer className="flex items-center justify-center w-full h-10">
-      <p className="text-sm">
-        © 2024 CodeBridge Sdn Bhd. All rights reserved.
-      </p>
+    <footer className="w-full py-3 text-center bg-gray-100 border-t text-sm text-gray-600">
+      © {new Date().getFullYear()} Carter Bank. All rights reserved.
+      <span className="mx-2">|</span>
+      <a href="/privacy" className="text-link hover:underline">
+        Privacy Policy
+      </a>
+      <span className="mx-2">|</span>
+      <a href="/support" className="text-link hover:underline">
+        Support
+      </a>
     </footer>
   );
 };
