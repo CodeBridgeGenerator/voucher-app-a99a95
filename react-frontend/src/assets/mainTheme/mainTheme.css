@@ -3340,10 +3340,7 @@
     padding: 1.25rem;
 }
 
-.fc {
-    /* FullCalendar 4 */
-    /* FullCalendar 5 */
-}
+/* .fc ruleset removed because it was empty and caused a compile error */
 .fc.fc-unthemed .fc-view-container th {
     background: #f8f9fa;
     border: 1px solid #dee2e6;

@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* If you are not using Tailwind via PostCSS, remove these lines. 
+   Otherwise, ensure your build process supports Tailwind CSS. */
 
 /* Buttons */
 .btn-primary {

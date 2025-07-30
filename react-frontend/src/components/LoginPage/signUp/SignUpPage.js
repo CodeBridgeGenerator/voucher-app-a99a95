@@ -1,11 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import client from "../../../services/restClient";
+import _ from "lodash";
+import SignUpStep from "./SignUpStep";
 import { Toast } from "primereact/toast";
+
 import { emailRegex } from "../../../utils/regex";
 import { codeGen } from "../../../utils/codegen";
-import SignUpStep from "./SignUpStep";
 import EnterDetailsStep from "./step/EnterDetails";
 import VerificationStep from "./step/Verification";
 import SetUpPassword from "./step/SetUpPassword";
@@ -13,9 +15,6 @@ import AppFooter from "../../Layouts/AppFooter";
 
 const SignUpPage = (props) => {
   const navigate = useNavigate();
-  const toast = useRef(null);
-
-  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,160 +22,296 @@ const SignUpPage = (props) => {
   const [sysCode, setSysCode] = useState();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [codeError, setCodeError] = useState("");
+  const [passwordError, setPasswordError] = useState(null);
+  const [step, setStep] = useState(1);
 
-  const showToast = (severity, summary, detail) => {
-    toast.current?.show({ severity, summary, detail, life: 3000 });
+  const toast = useRef(null);
+  const showSuccess = (message) => {
+    toast.current.show({
+      severity: "success",
+      summary: "Success",
+      detail: message,
+      life: 3000,
+    });
   };
 
-  const _getInviteEmail = async () =>
-    await client.service("userInvites").find({ query: { emailToInvite: email } });
-
-  const _getUserEmail = async () =>
-    await client.service("users").find({ query: { email } });
-
-  const _setCounter = async (id, count) =>
-    await client.service("userInvites").patch(id, { sendMailCounter: count });
-
-  const validateEmailStep = () => {
-    const err = {};
-    if (!emailRegex.test(email)) err.email = "Please enter a valid email";
-    if (!name.trim()) err.name = "Name is required";
-    setErrors(err);
-    return Object.keys(err).length === 0;
+  const showFailure = (summary, message) => {
+    toast.current.show({
+      severity: "error",
+      summary: summary,
+      detail: message,
+      life: 3000,
+    });
   };
 
-  const resendMail = async () => {
-    const loginEmailData = await _getInviteEmail();
-    let invite = loginEmailData?.data?.[0];
+  const _getInviteEmail = async () => {
+    return await client.service("userInvites").find({
+      query: {
+        emailToInvite: email,
+      },
+    });
+  };
 
-    if (!invite) {
-      const newInvite = await client.service("userInvites").create({
+  const _getUserEmail = async () => {
+    return await client.service("users").find({
+      query: {
+        email: email,
+      },
+    });
+  };
+
+  const _setCounter = async (id, count) => {
+    return await client.service("userInvites").patch(id, {
+      sendMailCounter: count,
+    });
+  };
+
+  const onFinishStepOne = async () => {
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email");
+      return;
+    }
+    if (!name.length) {
+      setNameError("name is required");
+      return;
+    }
+    resendMail();
+  };
+
+  const validateEmail = async () => {
+    let loginEmailData = await _getInviteEmail();
+    if (loginEmailData.data.length === 0) {
+      const _login = {
         emailToInvite: email,
         access: null,
         code: codeGen(),
         sendMailCounter: 0,
-      });
-      invite = newInvite;
+      };
+      const data = await client.service("userInvites").create(_login);
+      loginEmailData.data = [data];
     }
+    return loginEmailData.data[0];
+  };
 
-    if (invite.sendMailCounter >= 3)
-      return showToast("error", "Too many attempts", "Please contact admin.");
-    if (!invite.code || invite.code <= 10000)
-      return showToast("error", "Invalid code", "Contact admin.");
+  const validateEmailSending = (loginEmailData) => {
+    if (loginEmailData?.sendMailCounter >= 3) {
+      showFailure("Mail counter", "too many tries, please contact your admin");
+      return false;
+    }
+    return true;
+  };
 
-    setSysCode(invite.code);
+  const validateCode = (loginEmailData) => {
+    if (loginEmailData?.code > 10000) return true;
+    showFailure("Code Generator", "code not found, please contact your admin");
+    return false;
+  };
 
-    await client.service("mailQues").create({
+  const resendMail = async () => {
+    const loginEmailData = await validateEmail();
+    if (!validateEmailSending(loginEmailData)) return;
+    if (!validateCode(loginEmailData)) return;
+    setSysCode(loginEmailData.code);
+    const _mail = {
       name: "onCodeVerifyEmail",
       type: "signup",
       from: "info@cloudbasha.com",
       recipients: [email],
       status: true,
-      data: { name, code: invite.code },
-      subject: "Email code verification",
+      data: { name: name, code: loginEmailData.code },
+      subject: "email code verification process",
       templateId: "onCodeVerify",
+    };
+    setLoading(true);
+    await client.service("mailQues").create(_mail);
+    props.alert({
+      title: "Verification email sent.",
+      type: "success",
+      message: "Proceed to check your email inbox.",
     });
-
-    await _setCounter(invite._id, invite.sendMailCounter + 1);
-    showToast("success", "Verification Sent", `Check your email: ${email}`);
+    _setCounter(loginEmailData?._id, Number(++loginEmailData.sendMailCounter));
+    setLoading(false);
     setStep(2);
+    showSuccess(`Verification email sent to ${email}`);
   };
-
-  const onFinishStepOne = () => validateEmailStep() && resendMail();
 
   const onFinishStepTwo = () => {
-    code?.length === 6
-      ? setStep(3)
-      : setErrors({ code: "Enter the 6-digit code" });
+    if (!code || code.length !== 6) {
+      setCodeError("Please enter the code");
+      return;
+    }
+    setStep(3);
   };
 
-  const onFinishStepThree = async () => {
-    const err = {};
-    if (!password) err.password = "Password is required";
-    if (password !== confirmPassword)
-      err.confirmPassword = "Passwords do not match";
-    setErrors(err);
+  const onFinishStepThree = () => {
+    if (!password) {
+      setPasswordError("Password is required");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Confirm Password is not correct");
+      return;
+    }
 
-    if (Object.keys(err).length === 0) await signup();
+    signup();
+  };
+
+  const validate = () => {
+    let isValid = true;
+    if (!email) {
+      setEmailError("Please Enter a valid email");
+      isValid = false;
+    }
+
+    if (!name.length) {
+      setNameError("name is required");
+      isValid = false;
+    } else if (name.length < 3) {
+      setNameError("Must be at least 3 characters long");
+      isValid = false;
+    }
+    if (!password.length) {
+      setPasswordError("Password is required");
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError(
+        "Must be at least 6 characters long and have at least one letter, digit, uppercase, lowercase and symbol"
+      );
+      isValid = false;
+    }
+
+    if (password !== confirmPassword) {
+      setPasswordError("Confirm Password is not correct");
+      isValid = false;
+    }
+
+    return isValid;
   };
 
   const signup = async () => {
-    const userExists = await _getUserEmail();
-    if (userExists?.data?.length > 0) {
-      navigate("/login");
-      return showToast("warn", "Account exists", "Proceed to login");
-    }
-
-    try {
-      await props.createUser({ name, email, password, status: true });
-      navigate("/login");
-      showToast("success", "Account created", "Proceed to login");
-    } catch (error) {
-      showToast("error", "Signup failed", error.message || "An error occurred");
+    const user = await _getUserEmail();
+    if (validate()) {
+      try {
+        if (user?.data?.length === 0) {
+          props
+            .createUser({
+              name,
+              email: email,
+              password,
+              status: true,
+            })
+            .then(async () => {
+              navigate("/login");
+            });
+          props.alert({
+            title: "User account created successfully.",
+            type: "success",
+            message: "Proceed to login.",
+          });
+        } else {
+          navigate("/login");
+          props.alert({
+            title: "User account already created.",
+            type: "warn",
+            message: "Proceed to login.",
+          });
+        }
+      } catch (error) {
+        props.alert({
+          title: "User account failed to create.",
+          type: "error",
+          message: error.message || "Failed to sign in.",
+        });
+      }
+    } else {
+      props.alert({
+        title: "Sign up failed.",
+        type: "error",
+        message: "Please contact admin.",
+      });
+      return;
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen align-items-center justify-content-center bg-[#F8F9FA]">
       <Toast ref={toast} position="bottom-center" />
-
-      <Link to="/login" className="text-blue-700 font-semibold flex items-center gap-1">
-        <i className="pi pi-angle-left"></i> Back to login
-      </Link>
-
-      <header className="bg-white shadow p-5 flex justify-between items-center">
-        <div className="text-xl font-semibold text-blue-700">&nbsp;</div>
-        <SignUpStep step={step} />
-      </header>
-
-      <main className="flex-1 flex justify-center items-center p-6">
+      <div className="fixed top-0 left-0 w-full">
+        <div className="flex items-center justify-between p-5 bg-white shadow">
+          <div className="basis-auto">
+            <p className="text-xl font-semibold text-primary"></p>
+          </div>
+          <div className="basis-[700px]">
+            <SignUpStep step={step} />
+          </div>
+          <div className="basis-auto"></div>
+        </div>
+        <div className="flex items-center gap-2 p-5 bg-transparent">
+          <Link
+            to="/login"
+            className="flex items-center gap-2 font-semibold text-primary"
+          >
+            <i className="pi pi-angle-left"></i>
+            <p>Back to login</p>
+          </Link>
+        </div>
+      </div>
+      <div className="flex flex-col items-center justify-center flex-1 px-3">
         {step === 1 && (
           <EnterDetailsStep
-            name={name} setName={setName}
-            nameError={errors.name}
-            email={email} setEmail={setEmail}
-            emailError={errors.email}
+            email={email}
+            setEmail={setEmail}
+            emailError={emailError}
+            setEmailError={setEmailError}
+            name={name}
+            setName={setName}
+            nameError={nameError}
+            setNameError={setNameError}
             onNext={onFinishStepOne}
             loading={loading}
           />
         )}
-
         {step === 2 && (
           <VerificationStep
-            code={code} sysCode={sysCode} setCode={setCode}
-            codeError={errors.code}
-            setCodeError={(e) => setErrors(prev => ({ ...prev, code: e }))}
+            code={code}
+            sysCode={sysCode}
+            setCode={setCode}
+            codeError={codeError}
+            setCodeError={setCodeError}
             onNext={onFinishStepTwo}
             resendCode={resendMail}
-            loading={loading} setLoading={setLoading}
+            loading={loading}
+            setLoading={setLoading}
           />
         )}
-
         {step === 3 && (
           <SetUpPassword
-            password={password} setPassword={setPassword}
-            confirmPassword={confirmPassword} setConfirmPassword={setConfirmPassword}
-            passwordError={errors.password}
-            setPasswordError={(e) => setErrors(prev => ({ ...prev, password: e }))}
-            confirmPasswordError={errors.confirmPassword}
-            setConfirmPasswordError={(e) => setErrors(prev => ({ ...prev, confirmPassword: e }))}
+            password={password}
+            setPassword={setPassword}
+            confirmPassword={confirmPassword}
+            setConfirmPassword={setConfirmPassword}
+            passwordError={passwordError}
+            setPasswordError={setPasswordError}
+            confirmPasswordError={confirmPasswordError}
+            setConfirmPasswordError={setConfirmPasswordError}
             onNext={onFinishStepThree}
             loading={loading}
           />
         )}
-      </main>
-
+      </div>
       <AppFooter />
     </div>
   );
 };
 
-const mapState = (state) => ({
-  isLoggedIn: state.auth.isLoggedIn,
-  passwordPolicyErrors: state.auth.passwordPolicyErrors,
-});
-
+const mapState = (state) => {
+  const { isLoggedIn, passwordPolicyErrors } = state.auth;
+  return { isLoggedIn, passwordPolicyErrors };
+};
 const mapDispatch = (dispatch) => ({
   createUser: (data) => dispatch.auth.createUser(data),
   alert: (data) => dispatch.toast.alert(data),

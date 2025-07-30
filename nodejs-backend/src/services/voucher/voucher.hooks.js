@@ -1,5 +1,5 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
-const restrictToRoles = require('../../middleware/hooks/restrictToRoles'); // adjust path if needed
+const restrictToRoles = require('./restrictToRoles'); // adjust path if needed
 
 
 module.exports = {

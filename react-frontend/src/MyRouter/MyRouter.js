@@ -5,9 +5,10 @@ import ProtectedRoute from './ProtectedRoute';
 import NoMatch from './NoMatch';
 
 import LoginPage from '../components/LoginPage/LoginPage';
+import HomePage from "../components//app_components/HomePage/HomePage";
+import Dashboard from "../components/Dashboard/Dashboard";
 import SignUpPage from '../components/LoginPage/signUp/SignUpPage';
 import ResetPage from '../components/LoginPage/ResetPage';
-import Dashboard from '../components/Dashboard/Dashboard';
 import MaintenancePage from '../components/common/MaintenancePage';
 import LoginFaqPage from '../components/LoginPage/LoginFaqPage';
 import DashboardAdminControl from '../components/Dashboard/DashboardAdminControl';
@@ -99,7 +100,7 @@ import VoucherDetailsPage from "../components/app_components/VoucherPage/Voucher
 import VoucherProjectLayoutPage from "../components/app_components/VoucherPage/VoucherProjectLayoutPage";
 import SingleCartHistoryPage from "../components/app_components/CartHistoryPage/SingleCartHistoryPage";
 import CartHistoryProjectLayoutPage from "../components/app_components/CartHistoryPage/CartHistoryProjectLayoutPage";
-import HomePage from "../components/app_components/HomePage/HomePageSimple";
+
 import UserProfile from "../components/app_components/UserProfile/UserProfile";
 //  ~cb-add-import~
 
