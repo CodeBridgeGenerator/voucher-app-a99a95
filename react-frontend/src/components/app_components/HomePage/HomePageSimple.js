@@ -126,10 +126,13 @@ const HomePageSimple = (props) => {
               <span className="truncate">{props.isLoggedIn ? "My Account" : "Login"}</span>
             </button>
             <div
-              className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 cursor-pointer"
-              style={{backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuBlgIk0YWLrM0nNEqIEwdfR6FT-vvx7Xezf1UAjOwzmRblaVUArIooSwWX5l4PQm9sVwJUGJVGSr1nLE_rIx6itbpsnhWmuwGSbyoSDDTA_tNSqJB6A1e7D9ODfdUMwPGLjwyfJFTRs14ld8RVdhlF8E_rTIrcwjHBsooGJ0Xjqe4zhyAjUeXolPCBIgNkYJtoN9xrbp7hoCtqP6-MdD9c1Wlcq8R8rME3yWvLNNUdyZfWFSnUdePmVPn0Xv_BjrfKVQ_Sb7H0y8II")`}}
+              className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 cursor-pointer bg-gray-300 flex items-center justify-center"
               onClick={handleMyAccountClick}
-            ></div>
+            >
+              <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+              </svg>
+            </div>
           </div>
         </header>
 
@@ -140,8 +143,7 @@ const HomePageSimple = (props) => {
             <div className="container mx-auto">
               <div className="px-4 py-3">
                 <div
-                  className="bg-cover bg-center flex flex-col justify-end overflow-hidden bg-white rounded-lg min-h-[218px] cursor-pointer"
-                  style={{backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 25%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDGny1Q4gEp_dYtYn2ReVCl9ZcgpqUTLzZniQhmYF1fLOP1PY3OL6NRLbmjFVQQ4wru_H3MhTwvx8iXMBVKzuk52ivQ6UAKq08BYpjKA4wkUh16WJ_l_CG6XPLe8ivJbN1bTHnKxfLywdUaXacZve8ToreD7y9zeaJa1yGPi4rfGOyImVd1jUIxnkJw0p73RSYCsapeROslHJbXXsph01pAxsS-xcMt1eFIS33EvW8js14J7EeOaCzsjvOdHCxg5dG2srASPV4AW3M")`}}
+                  className="bg-cover bg-center flex flex-col justify-end overflow-hidden bg-gradient-to-br from-blue-600 to-purple-700 rounded-lg min-h-[218px] cursor-pointer"
                   onClick={() => props.isLoggedIn ? navigate("/voucher") : navigate("/login")}
                 >
                   <div className="flex p-4">

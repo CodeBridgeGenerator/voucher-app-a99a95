@@ -1,13 +1,13 @@
 import React from "react";
-import ProjectLayout from "../../Layouts/ProjectLayout";
+import UserProjectLayout from "../../Layouts/UserProjectLayout";
 import { connect } from "react-redux";
 import CartPage from "./CartPage";
 
 const CartProjectLayoutPage = (props) => {
   return (
-    <ProjectLayout>
+    <UserProjectLayout>
       <CartPage />
-    </ProjectLayout>
+    </UserProjectLayout>
   );
 };
 

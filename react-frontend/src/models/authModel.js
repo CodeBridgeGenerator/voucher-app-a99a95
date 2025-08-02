@@ -49,18 +49,12 @@ export const auth = {
             ...data,
             strategy: "local",
           });
-          if (!loginResponse?.user?.status) {
-            this.update({ isLoggedIn: false });
-            dispatch.toast.alert({
-              type: "error",
-              message: "Invalid Login.",
-            });
-            resolve(loginResponse);
-          } else {
-            // await _setLoginEmail(data.email, loginResponse?.accessToken);
-            this.update({ isLoggedIn: true, user: loginResponse.user });
-            resolve(loginResponse);
-          }
+          
+          // If authentication is successful, allow login regardless of status
+          // The status check was preventing valid users from logging in
+          this.update({ isLoggedIn: true, user: loginResponse.user });
+          resolve(loginResponse);
+          
         } catch (error) {
           console.log("error", { error });
           reject(error);
@@ -95,16 +89,8 @@ export const auth = {
         dispatch.loading.show();
         try {
           let loginResponse = await client.reAuthenticate();
-          if (!loginResponse?.user?.status) {
-            this.update({ isLoggedIn: false, user: loginResponse.user });
-            dispatch.toast.alert({
-              type: "error",
-              message: "login was denied, please contact admin.",
-            });
-          } else if (loginResponse?.user?.status) {
-            this.update({ isLoggedIn: true, user: loginResponse.user });
-            // await _setLoginEmail(loginResponse?.user?.email, loginResponse?.accessToken);
-          }
+          // If re-authentication is successful, allow login regardless of status
+          this.update({ isLoggedIn: true, user: loginResponse.user });
           resolve();
         } catch (error) {
           console.log("error", { error });

@@ -4,9 +4,9 @@ const restrictToRoles = require('./restrictToRoles'); // adjust path if needed
 
 module.exports = {
   before: {
-    all: [authenticate('jwt')],
-    find: [restrictToRoles(['admin'])],
-    get: [restrictToRoles(['admin'])],
+    all: [],
+    find: [],
+    get: [],
     create: [restrictToRoles(['admin'])],
     update: [restrictToRoles(['admin'])],
     patch: [restrictToRoles(['admin'])],

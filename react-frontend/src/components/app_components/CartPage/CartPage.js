@@ -213,45 +213,8 @@ const CartPage = (props) => {
   }
 
   return (
-    <div className="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style={{fontFamily: '"Public Sans", "Noto Sans", sans-serif'}}>
-      <div className="layout-container flex h-full grow flex-col">
-        {/* Header */}
-        <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f4] px-4 md:px-10 py-3">
-          <div className="flex items-center gap-4 text-[#111418]">
-            <div className="size-4">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M44 11.2727C44 14.0109 39.8386 16.3957 33.69 17.6364C39.8386 18.877 44 21.2618 44 24C44 26.7382 39.8386 29.123 33.69 30.3636C39.8386 31.6043 44 33.9891 44 36.7273C44 40.7439 35.0457 44 24 44C12.9543 44 4 40.7439 4 36.7273C4 33.9891 8.16144 31.6043 14.31 30.3636C8.16144 29.123 4 26.7382 4 24C4 21.2618 8.16144 18.877 14.31 17.6364C8.16144 16.3957 4 14.0109 4 11.2727C4 7.25611 12.9543 4 24 4C35.0457 4 44 7.25611 44 11.2727Z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </div>
-            <h2 className="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em]">Carter Bank</h2>
-          </div>
-          <div className="flex flex-1 justify-end gap-8">
-            <div className="hidden md:flex items-center gap-9">
-              <a className="text-[#111418] text-sm font-medium leading-normal cursor-pointer" onClick={handleRewardsClick}>Rewards</a>
-              <a className="text-[#111418] text-sm font-medium leading-normal cursor-pointer" onClick={handleTravelClick}>Travel</a>
-              <a className="text-[#111418] text-sm font-medium leading-normal cursor-pointer" onClick={handleDiningClick}>Dining</a>
-              <a className="text-[#111418] text-sm font-medium leading-normal cursor-pointer" onClick={handleShoppingClick}>Shopping</a>
-            </div>
-            <button
-              className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f2f4] text-[#111418] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#e0e2e4] transition-colors"
-              onClick={handleHelpClick}
-            >
-              <span className="truncate">Help</span>
-            </button>
-            <div
-              className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 cursor-pointer"
-              style={{backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuDCcWnoUmrTIWvFKxLOGVFYvsv07eHGX2e0ehKQ5SqOZgdlMIcBLkZq1IRgINRlTEQr6KXk3SO30RK2G7AKJbtrXKADgvUOt0or4OulFUGaBuvpJRW1wclMgnkUU8KaeDH2uE8VbNCBQ68EFrvneix-7TDpu7icdZYO0X5zg_EkWiTKWMsLHU4OeguM7fRe50H4oQfkyl3FQgULL32b8aWN-KttVZ9KhP0MiKSMulQukfmX4utTGF2frdDlnRthcGf0r00dwncg34k")`}}
-              onClick={handleProfileClick}
-            ></div>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <div className="px-4 md:px-20 lg:px-40 flex flex-1 justify-center py-5">
-          <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
+    <div className="space-y-8">
+      <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
             {/* Breadcrumb */}
             <div className="flex flex-wrap gap-2 p-4">
               <a className="text-[#637588] text-base font-medium leading-normal cursor-pointer" onClick={handleRewardsClick}>Rewards</a>
@@ -371,8 +334,6 @@ const CartPage = (props) => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </div>
   );
 };

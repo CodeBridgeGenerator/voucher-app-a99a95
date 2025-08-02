@@ -1,12 +1,12 @@
 import React from "react";
 import UserProjectLayout from "../../Layouts/UserProjectLayout";
 import { connect } from "react-redux";
-import VoucherPage from "./VoucherPage";
+import VoucherDetailsPage from "./VoucherDetailsPage";
 
-const VoucherProjectLayoutPage = (props) => {
+const VoucherDetailsProjectLayoutPage = (props) => {
   return (
     <UserProjectLayout>
-      <VoucherPage />
+      <VoucherDetailsPage />
     </UserProjectLayout>
   );
 };
@@ -20,4 +20,4 @@ const mapDispatch = (dispatch) => ({
   alert: (data) => dispatch.toast.alert(data),
 });
 
-export default connect(mapState, mapDispatch)(VoucherProjectLayoutPage);
+export default connect(mapState, mapDispatch)(VoucherDetailsProjectLayoutPage); 

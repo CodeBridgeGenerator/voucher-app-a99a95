@@ -320,17 +320,8 @@ const AppTopbar = (props) => {
 
   return props.isLoggedIn ? (
     <div className="layout-topbar">
-      <Link to="/project">
-        <div className="cursor-pointer min-w-max flex align-items-end">
-          <img src={"./assets/logo/cb-logo.svg"} height={30} className="mb-1" />
-          <h3
-            className="text-red-500"
-            style={{ fontFamily: "MarlinGeo", fontWeight: "bolder", margin: 0 }}
-          >
-            <i className="pi pi-menu" style={{ fontSize: "1.5rem" }}></i>{" "}
-            {label !== "" ? label : "My App"}
-          </h3>
-        </div>
+      <Link to="/project" className="text-gray-800 hover:text-gray-600 font-semibold text-lg">
+        {label !== "" ? label : "Carter Bank"}
       </Link>
       {ticker}
 

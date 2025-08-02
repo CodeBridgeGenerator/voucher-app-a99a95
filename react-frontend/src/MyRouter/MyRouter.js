@@ -6,6 +6,7 @@ import NoMatch from './NoMatch';
 
 import LoginPage from '../components/LoginPage/LoginPage';
 import HomePage from "../components//app_components/HomePage/HomePage";
+import HomeProjectLayoutPage from "../components//app_components/HomePage/HomeProjectLayoutPage";
 import Dashboard from "../components/Dashboard/Dashboard";
 import SignUpPage from '../components/LoginPage/signUp/SignUpPage';
 import ResetPage from '../components/LoginPage/ResetPage';
@@ -96,7 +97,9 @@ import TestProjectLayoutPage from '../components/cb_components/TestsPage/TestPro
 import SingleTestsPage from '../components/cb_components/TestsPage/SingleTestsPage';
 
 import CartPage from "../components/app_components/CartPage/CartPage";
+import CartProjectLayoutPage from "../components/app_components/CartPage/CartProjectLayoutPage";
 import VoucherDetailsPage from "../components/app_components/VoucherPage/VoucherDetailsPage";
+import VoucherDetailsProjectLayoutPage from "../components/app_components/VoucherPage/VoucherDetailsProjectLayoutPage";
 import VoucherProjectLayoutPage from "../components/app_components/VoucherPage/VoucherProjectLayoutPage";
 import SingleCartHistoryPage from "../components/app_components/CartHistoryPage/SingleCartHistoryPage";
 import CartHistoryProjectLayoutPage from "../components/app_components/CartHistoryPage/CartHistoryProjectLayoutPage";
@@ -107,8 +110,16 @@ import UserProfile from "../components/app_components/UserProfile/UserProfile";
 const MyRouter = (props) => {
     return (
         <Routes>
-            <Route path="/" exact element={<HomePage />} />
-            <Route path="/home" exact element={<HomePage />} />
+            <Route path="/" exact element={
+                props.isLoggedIn 
+                    ? (props.user?.role === "admin" ? <HomePage /> : <HomeProjectLayoutPage />)
+                    : <HomePage />
+                } />
+            <Route path="/home" exact element={
+                props.isLoggedIn 
+                    ? (props.user?.role === "admin" ? <HomePage /> : <HomeProjectLayoutPage />)
+                    : <HomePage />
+                } />
             {/* <Route path="/login" exact element={props.isLoggedIn === true ? <HomePage /> : <LoginPage />} /> */}
             <Route path="/login" exact element={
                 props.isLoggedIn 
@@ -127,8 +138,12 @@ const MyRouter = (props) => {
                 <Route path="/account" exact element={<Account />} />
                 <Route path="/users/:singleUsersId" exact element={<SingleUsersPage />} />
                 <Route path="/users" exact element={<UserProjectLayoutPage />} />
-                <Route path="/cart" exact element={<CartPage />} />
-                <Route path="/voucher/:singleVoucherId" exact element={<VoucherDetailsPage />} />
+                <Route path="/cart" exact element={
+                    props.user?.role === "admin" ? <CartPage /> : <CartProjectLayoutPage />
+                } />
+                <Route path="/voucher/:singleVoucherId" exact element={
+                    props.user?.role === "admin" ? <VoucherDetailsPage /> : <VoucherDetailsProjectLayoutPage />
+                } />
                 <Route path="/voucher" exact element={<VoucherProjectLayoutPage />} />
                 <Route path="/cartHistory/:singleCartHistoryId" exact element={<SingleCartHistoryPage />} />
                 <Route path="/cartHistory" exact element={<CartHistoryProjectLayoutPage />} />
