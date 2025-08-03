@@ -103,6 +103,7 @@ import VoucherDetailsProjectLayoutPage from "../components/app_components/Vouche
 import VoucherProjectLayoutPage from "../components/app_components/VoucherPage/VoucherProjectLayoutPage";
 import SingleCartHistoryPage from "../components/app_components/CartHistoryPage/SingleCartHistoryPage";
 import CartHistoryProjectLayoutPage from "../components/app_components/CartHistoryPage/CartHistoryProjectLayoutPage";
+import SuccessPage from "../components/app_components/SuccessPage/SuccessPage";
 
 import UserProfile from "../components/app_components/UserProfile/UserProfile";
 //  ~cb-add-import~
@@ -147,6 +148,7 @@ const MyRouter = (props) => {
                 <Route path="/voucher" exact element={<VoucherProjectLayoutPage />} />
                 <Route path="/cartHistory/:singleCartHistoryId" exact element={<SingleCartHistoryPage />} />
                 <Route path="/cartHistory" exact element={<CartHistoryProjectLayoutPage />} />
+                <Route path="/success" exact element={<SuccessPage />} />
                 <Route path="/profile" exact element={<UserProfile />} />
 
                 {/* 🔐 Admin-Only Routes */}

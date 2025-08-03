@@ -46,6 +46,7 @@ const CartHistoryPage = (props) => {
     const [initialData, setInitialData] = useState([]);
     const [selectedSortOption, setSelectedSortOption] = useState("");
     const [selectedDelete, setSelectedDelete] = useState([]);
+    const [authError, setAuthError] = useState(false);
 
     const toggleHelpSidebar = () => {
         setHelpSidebarVisible(!isHelpSidebarVisible);
@@ -69,43 +70,76 @@ const CartHistoryPage = (props) => {
 
     useEffect(() => {
         //on mount
-        setLoading(true);
-        props.show();
-        client
-            .service("cartHistory")
-            .find({ query: { $limit: 10000 , userID : urlParams.singleUsersId ,voucherID : urlParams.singleVoucherId  , $populate : [
-                {
-                path: "createdBy",
-                service: "users",
-                select: ["name"],
-              },            {
-                path: "updatedBy",
-                service: "users",
-                select: ["name"],
-              },{
-                        path : "userID",
-                        service : "users",
-                        select:["name"]
-                    },{
-                        path : "voucherID",
-                        service : "voucher",
-                        select:["title"]
+        const loadCartHistory = async () => {
+            setLoading(true);
+            props.show();
+            
+            // Check if user is authenticated
+            if (!props.isLoggedIn || !props.user) {
+                console.log("User not authenticated, showing empty state");
+                setData([]);
+                setAuthError(true);
+                props.hide();
+                setLoading(false);
+                return;
+            }
+            
+            setAuthError(false);
+            
+            try {
+                const response = await client.service("cartHistory").find({ 
+                    query: { 
+                        $limit: 10000,
+                        ...(urlParams.singleUsersId && { userID: urlParams.singleUsersId }),
+                        ...(urlParams.singleVoucherId && { voucherID: urlParams.singleVoucherId }),
+                        $populate: [
+                            {
+                                path: "createdBy",
+                                service: "users",
+                                select: ["name"],
+                            },
+                            {
+                                path: "updatedBy",
+                                service: "users",
+                                select: ["name"],
+                            },
+                            {
+                                path: "userID",
+                                service: "users",
+                                select: ["name"]
+                            },
+                            {
+                                path: "voucherID",
+                                service: "voucher",
+                                select: ["title"]
+                            }
+                        ]
                     }
-            ] }})
-            .then((res) => {
-                let results = res.data;
-                 
+                });
+                
+                let results = response.data;
                 setData(results);
                 props.hide();
                 setLoading(false);
-            })
-            .catch((error) => {
-                console.log({ error });
-                setLoading(false);
-                props.hide();
-                props.alert({ title: "CartHistory", type: "error", message: error.message || "Failed get CartHistory" });
-            });
-    }, [showFakerDialog, showDeleteAllDialog, showEditDialog, showCreateDialog]);
+            } catch (error) {
+                console.error("Error loading cart history:", error);
+                
+                // If authorization error, show empty state with message
+                if (error.message.includes("not authorized") || error.message.includes("authentication")) {
+                    console.log("Authorization error, showing empty state");
+                    setData([]);
+                    setAuthError(true);
+                    props.hide();
+                    setLoading(false);
+                } else {
+                    props.alert({ type: "error", message: "Failed to load cart history: " + error.message });
+                    setLoading(false);
+                }
+            }
+        };
+        
+        loadCartHistory();
+    }, [showFakerDialog, showDeleteAllDialog, showEditDialog, showCreateDialog, props.isLoggedIn, props.user]);
 
   const onClickSaveFilteredfields = (ff) => {
     console.log(ff);
@@ -396,25 +430,37 @@ rounded loading={loading} icon="pi pi-plus" onClick={() => setShowCreateDialog(t
             </div>
             <div className="grid align-items-center">
                 <div className="col-11" role="cartHistory-datatable">
-                    <CartHistoryDatatable items={data} fields={fields} onRowDelete={onRowDelete} onEditRow={onEditRow} onRowClick={onRowClick} searchDialog={searchDialog} setSearchDialog={setSearchDialog}
-            showUpload={showUpload}
-            setShowUpload={setShowUpload}
-            showFilter={showFilter}
-            setShowFilter={setShowFilter}
-            showColumns={showColumns}
-            setShowColumns={setShowColumns}
-            onClickSaveFilteredfields={onClickSaveFilteredfields}
-            selectedFilterFields={selectedFilterFields}
-            setSelectedFilterFields={setSelectedFilterFields}
-            selectedHideFields={selectedHideFields}
-            setSelectedHideFields={setSelectedHideFields}
-            onClickSaveHiddenfields={onClickSaveHiddenfields}
-            loading={loading}
-            user={props.user}
-            selectedDelete={selectedDelete}
-            setSelectedDelete={setSelectedDelete}
-            onCreateResult={onCreateResult}
-/>            
+                    {!loading && data.length === 0 && (authError || !props.isLoggedIn) ? (
+                        <div className="text-center p-4">
+                            <h3 className="text-lg font-semibold text-gray-700 mb-2">No Cart History Available</h3>
+                            <p className="text-gray-500">Please log in to view your cart history.</p>
+                        </div>
+                    ) : !loading && data.length === 0 ? (
+                        <div className="text-center p-4">
+                            <h3 className="text-lg font-semibold text-gray-700 mb-2">No Cart History Found</h3>
+                            <p className="text-gray-500">You haven't redeemed any vouchers yet. Start shopping to see your history here!</p>
+                        </div>
+                    ) : (
+                        <CartHistoryDatatable items={data} fields={fields} onRowDelete={onRowDelete} onEditRow={onEditRow} onRowClick={onRowClick} searchDialog={searchDialog} setSearchDialog={setSearchDialog}
+                showUpload={showUpload}
+                setShowUpload={setShowUpload}
+                showFilter={showFilter}
+                setShowFilter={setShowFilter}
+                showColumns={showColumns}
+                setShowColumns={setShowColumns}
+                onClickSaveFilteredfields={onClickSaveFilteredfields}
+                selectedFilterFields={selectedFilterFields}
+                setSelectedFilterFields={setSelectedFilterFields}
+                selectedHideFields={selectedHideFields}
+                setSelectedHideFields={setSelectedHideFields}
+                onClickSaveHiddenfields={onClickSaveHiddenfields}
+                loading={loading}
+                user={props.user}
+                selectedDelete={selectedDelete}
+                setSelectedDelete={setSelectedDelete}
+                onCreateResult={onCreateResult}
+        />            
+                        )}
                  </div>
             </div>
             <DownloadCSV

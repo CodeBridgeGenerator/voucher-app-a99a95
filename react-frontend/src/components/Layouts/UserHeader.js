@@ -59,7 +59,7 @@ const UserHeader = (props) => {
           <a className="text-[#111418] text-sm font-medium leading-normal cursor-pointer" onClick={() => navigate("/home")}>Home</a>
                            <a className="text-[#111418] text-sm font-medium leading-normal cursor-pointer" onClick={() => navigate("/voucher")}>Vouchers</a>
           <a className="text-[#111418] text-sm font-medium leading-normal cursor-pointer" onClick={() => navigate("/cart")}>Cart</a>
-          <a className="text-[#111418] text-sm font-medium leading-normal cursor-pointer" onClick={() => navigate("/cartHistory")}>History</a>
+          {/* <a className="text-[#111418] text-sm font-medium leading-normal cursor-pointer" onClick={() => navigate("/cartHistory")}>History</a> */}
         </div>
         <button
           className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f2f4] text-[#111418] text-sm font-bold leading-normal tracking-[0.015em]"

@@ -37,68 +37,100 @@ const VoucherPage = (props) => {
                 {
                     _id: '1',
                     title: 'Gourmet Dining Experience',
-                    description: '20% off at Michelin-star restaurants',
+                    description: '20% off at Michelin-star restaurants. Enjoy exclusive dining at the finest establishments with our premium voucher program.',
                     image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
                     category: 'Food & Dining',
-                    points: 500
+                    points: 5000,
+                    pointsCost: 5000,
+                    termsAndConditions: 'Valid for one person. Advance booking required. Cannot be combined with other offers.',
+                    howToRedeem: 'Present voucher code at participating restaurants. Booking must be made 24 hours in advance.',
+                    expiryDate: 'December 31, 2024'
                 },
                 {
                     _id: '2',
                     title: 'Luxury Shopping Spree',
-                    description: '15% off at premium boutiques',
+                    description: '15% off at premium boutiques. Access exclusive discounts at high-end fashion and luxury retailers.',
                     image: 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
                     category: 'Shopping',
-                    points: 750
+                    points: 7500,
+                    pointsCost: 7500,
+                    termsAndConditions: 'Valid for one transaction. Cannot be used on sale items. Subject to store availability.',
+                    howToRedeem: 'Show voucher at participating stores. Valid ID required for verification.',
+                    expiryDate: 'December 31, 2024'
                 },
                 {
                     _id: '3',
                     title: 'VIP Entertainment Access',
-                    description: 'Exclusive tickets to premium events',
+                    description: 'Exclusive tickets to premium events. Get front-row access to the most sought-after entertainment experiences.',
                     image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
                     category: 'Entertainment',
-                    points: 1000
+                    points: 10000,
+                    pointsCost: 10000,
+                    termsAndConditions: 'Valid for one event. Non-transferable. Subject to event availability.',
+                    howToRedeem: 'Voucher will be exchanged for tickets at venue. Arrive 30 minutes before event.',
+                    expiryDate: 'December 31, 2024'
                 },
                 {
                     _id: '4',
                     title: 'First-Class Travel Upgrade',
-                    description: 'Complimentary upgrade on select flights',
+                    description: 'Complimentary upgrade on select flights. Experience luxury travel with our exclusive upgrade program.',
                     image: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80',
                     category: 'Travel',
-                    points: 1500
+                    points: 15000,
+                    pointsCost: 15000,
+                    termsAndConditions: 'Subject to availability. Valid for one-way or round-trip flights. Cannot be combined with other upgrades.',
+                    howToRedeem: 'Present voucher at check-in counter. Upgrade subject to seat availability.',
+                    expiryDate: 'December 31, 2024'
                 }
             ]);
             setCategoryVouchers([
                 {
                     _id: '5',
                     title: 'Spa Retreat Package',
-                    description: 'Full day spa experience for two',
+                    description: 'Full day spa experience for two. Indulge in a luxurious spa day with premium treatments and facilities.',
                     image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
                     category: 'Health & Beauty',
-                    points: 800
+                    points: 8000,
+                    pointsCost: 8000,
+                    termsAndConditions: 'Valid for two people. Advance booking required. Includes full access to spa facilities.',
+                    howToRedeem: 'Contact spa directly to book appointment. Present voucher upon arrival.',
+                    expiryDate: 'December 31, 2024'
                 },
                 {
                     _id: '6',
                     title: 'Wine Tasting Experience',
-                    description: 'Private tasting with sommelier',
+                    description: 'Private tasting with sommelier. Enjoy an exclusive wine tasting experience with expert guidance.',
                     image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
                     category: 'Food & Dining',
-                    points: 600
+                    points: 6000,
+                    pointsCost: 6000,
+                    termsAndConditions: 'Valid for one person. Must be 21 or older. Includes tasting of premium wines.',
+                    howToRedeem: 'Book directly with participating wineries. Valid ID required for age verification.',
+                    expiryDate: 'December 31, 2024'
                 },
                 {
                     _id: '7',
                     title: 'Designer Accessories',
-                    description: '10% off luxury handbags and watches',
+                    description: '10% off luxury handbags and watches. Access exclusive discounts on premium accessories.',
                     image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1636&q=80',
                     category: 'Shopping',
-                    points: 900
+                    points: 9000,
+                    pointsCost: 9000,
+                    termsAndConditions: 'Valid for one transaction. Cannot be used on sale items. Subject to store availability.',
+                    howToRedeem: 'Present voucher at participating luxury retailers. Valid ID required.',
+                    expiryDate: 'December 31, 2024'
                 },
                 {
                     _id: '8',
                     title: 'Concert VIP Package',
-                    description: 'Backstage passes and premium seating',
+                    description: 'Backstage passes and premium seating. Get exclusive access to the most popular concerts and events.',
                     image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
                     category: 'Entertainment',
-                    points: 1200
+                    points: 12000,
+                    pointsCost: 12000,
+                    termsAndConditions: 'Valid for one event. Non-transferable. Includes backstage access and premium seating.',
+                    howToRedeem: 'Voucher exchanged for VIP package at venue. Arrive 1 hour before event.',
+                    expiryDate: 'December 31, 2024'
                 }
             ]);
         } finally {
@@ -107,7 +139,10 @@ const VoucherPage = (props) => {
     };
 
     const handleVoucherClick = (voucher) => {
-        navigate(`/voucher/${voucher._id || voucher.id}`);
+        // Pass voucher data as state to the detail page
+        navigate(`/voucher/${voucher._id || voucher.id}`, {
+            state: { voucherData: voucher }
+        });
     };
 
     const handleCategoryClick = (category) => {
